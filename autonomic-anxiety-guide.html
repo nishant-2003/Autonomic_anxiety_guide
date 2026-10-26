@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Autonomic — Anxiety Awareness Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  /* ── TOKENS ────────────────────────────────────────────────── */
+  :root {
+    --ink:       #0e0e10;
+    --paper:     #f5f1eb;
+    --sage:      #4a7c6f;
+    --sage-lt:   #7aab9c;
+    --sage-pale: #d6ebe6;
+    --sand:      #c8b89a;
+    --blush:     #e8d5c4;
+    --warn:      #c06040;
+    --radius:    14px;
+    --ff-disp:   'DM Serif Display', Georgia, serif;
+    --ff-body:   'DM Sans', system-ui, sans-serif;
+    --ease:      cubic-bezier(.22,.6,.36,1);
+  }
+
+  /* ── RESET ─────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    font-family: var(--ff-body);
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+    cursor: none;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { cursor: none; font-family: var(--ff-body); border: none; background: none; }
+  img { display: block; max-width: 100%; }
+
+  /* ── CUSTOM CURSOR ─────────────────────────────────────────── */
+  #cursor {
+    position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--sage); transform: translate(-50%,-50%);
+    transition: width .2s var(--ease), height .2s var(--ease), opacity .2s;
+    mix-blend-mode: multiply;
+  }
+  #cursor.grow { width: 40px; height: 40px; opacity: .5; }
+
+  /* ── NAV ───────────────────────────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(245,241,235,.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(74,124,111,.15);
+  }
+  .nav-logo {
+    font-family: var(--ff-disp); font-size: 1.35rem; letter-spacing: -.02em;
+    color: var(--sage);
+  }
+  .nav-logo span { font-style: italic; color: var(--sand); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-size: .85rem; font-weight: 500; letter-spacing: .06em;
+    text-transform: uppercase; color: var(--ink); opacity: .6;
+    transition: opacity .2s;
+  }
+  .nav-links a:hover { opacity: 1; }
+  .nav-cta {
+    padding: 10px 22px; border-radius: 100px;
+    background: var(--sage); color: #fff;
+    font-size: .82rem; font-weight: 500; letter-spacing: .04em;
+    transition: background .2s, transform .15s;
+  }
+  .nav-cta:hover { background: var(--sage-lt); transform: translateY(-1px); }
+
+  /* ── SECTIONS ──────────────────────────────────────────────── */
+  section { min-height: 100vh; padding: 120px 48px 80px; }
+  .section-label {
+    font-size: .72rem; font-weight: 500; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--sage); margin-bottom: 16px;
+  }
+
+  /* ── HERO ──────────────────────────────────────────────────── */
+  #hero {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 48px; align-items: center;
+    min-height: 100vh; padding-top: 120px;
+    background: var(--paper);
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 60% 70% at 70% 40%, rgba(122,171,156,.18) 0%, transparent 65%),
+                radial-gradient(ellipse 40% 50% at 20% 80%, rgba(200,184,154,.2) 0%, transparent 60%);
+  }
+  .hero-blob {
+    position: absolute; right: -80px; top: 50%; transform: translateY(-50%);
+    width: 540px; height: 540px; border-radius: 60% 40% 55% 45% / 50% 55% 45% 50%;
+    background: linear-gradient(135deg, var(--sage-pale), var(--blush));
+    animation: morphBlob 12s ease-in-out infinite alternate;
+  }
+  @keyframes morphBlob {
+    0%   { border-radius: 60% 40% 55% 45% / 50% 55% 45% 50%; }
+    50%  { border-radius: 40% 60% 45% 55% / 55% 45% 55% 45%; }
+    100% { border-radius: 55% 45% 60% 40% / 45% 60% 40% 55%; }
+  }
+  .hero-text { position: relative; z-index: 2; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 16px; border-radius: 100px;
+    background: var(--sage-pale); color: var(--sage);
+    font-size: .78rem; font-weight: 500; letter-spacing: .08em;
+    text-transform: uppercase; margin-bottom: 32px;
+  }
+  .hero-eyebrow::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--sage); animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.8)} }
+  .hero-h1 {
+    font-family: var(--ff-disp); font-size: clamp(3rem, 5vw, 5.5rem);
+    line-height: 1.05; letter-spacing: -.03em; margin-bottom: 24px;
+  }
+  .hero-h1 em { font-style: italic; color: var(--sage); }
+  .hero-sub {
+    font-size: 1.05rem; line-height: 1.7; color: rgba(14,14,16,.65);
+    max-width: 440px; margin-bottom: 40px; font-weight: 300;
+  }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 28px; border-radius: 100px;
+    background: var(--ink); color: #fff;
+    font-size: .9rem; font-weight: 500;
+    transition: background .2s, transform .15s, box-shadow .2s;
+  }
+  .btn-primary:hover { background: var(--sage); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(74,124,111,.3); }
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 28px; border-radius: 100px;
+    border: 1.5px solid rgba(14,14,16,.2); color: var(--ink);
+    font-size: .9rem; font-weight: 500;
+    transition: border-color .2s, background .2s, transform .15s;
+  }
+  .btn-outline:hover { border-color: var(--sage); background: var(--sage-pale); transform: translateY(-2px); }
+  .hero-visual { position: relative; z-index: 2; }
+  .hero-card {
+    background: #fff; border-radius: 24px; padding: 32px;
+    box-shadow: 0 4px 40px rgba(14,14,16,.08);
+    transform: rotate(2deg);
+    animation: floatCard 6s ease-in-out infinite;
+  }
+  @keyframes floatCard {
+    0%,100% { transform: rotate(2deg) translateY(0); }
+    50%      { transform: rotate(2deg) translateY(-10px); }
+  }
+  .hero-card-label { font-size: .72rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--sage); margin-bottom: 20px; }
+  .fact-row { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--sage-pale); }
+  .fact-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .fact-num { font-family: var(--ff-disp); font-size: 2.2rem; color: var(--sage); line-height: 1; min-width: 80px; }
+  .fact-desc { font-size: .85rem; line-height: 1.5; color: rgba(14,14,16,.65); font-weight: 300; }
+  .fact-src { font-size: .7rem; color: var(--sage-lt); margin-top: 4px; }
+
+  /* ── WHAT IS ────────────────────────────────────────────────── */
+  #what {
+    background: var(--ink); color: var(--paper);
+    padding: 120px 48px;
+  }
+  #what .section-label { color: var(--sage-lt); }
+  .what-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; margin-top: 64px; }
+  .what-intro {
+    font-family: var(--ff-disp); font-size: clamp(1.8rem, 3vw, 2.6rem);
+    line-height: 1.3; letter-spacing: -.02em;
+  }
+  .what-intro em { font-style: italic; color: var(--sage-lt); }
+  .symptoms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px; }
+  .symptom-chip {
+    padding: 12px 16px; border-radius: 12px;
+    background: rgba(245,241,235,.06); border: 1px solid rgba(245,241,235,.1);
+    font-size: .82rem; color: rgba(245,241,235,.75);
+    transition: background .2s, border-color .2s;
+  }
+  .symptom-chip:hover { background: rgba(74,124,111,.2); border-color: var(--sage); }
+  .types-list { display: flex; flex-direction: column; gap: 16px; }
+  .type-item {
+    padding: 20px; border-radius: 16px;
+    border: 1px solid rgba(245,241,235,.1);
+    transition: border-color .2s, background .2s;
+  }
+  .type-item:hover { border-color: var(--sage); background: rgba(74,124,111,.08); }
+  .type-name { font-weight: 500; font-size: .9rem; margin-bottom: 6px; color: var(--sage-lt); }
+  .type-desc { font-size: .82rem; color: rgba(245,241,235,.5); line-height: 1.5; font-weight: 300; }
+
+  /* ── SURVEY ─────────────────────────────────────────────────── */
+  #survey {
+    background: var(--blush);
+    padding: 120px 48px;
+  }
+  .survey-wrap {
+    max-width: 680px; margin: 0 auto;
+  }
+  .survey-header { text-align: center; margin-bottom: 56px; }
+  .survey-header h2 {
+    font-family: var(--ff-disp); font-size: clamp(2rem, 3.5vw, 3.2rem);
+    line-height: 1.15; letter-spacing: -.02em; margin-bottom: 16px;
+  }
+  .survey-header p { font-size: .95rem; color: rgba(14,14,16,.6); line-height: 1.7; font-weight: 300; }
+  .survey-tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 40px; }
+  .survey-tab {
+    padding: 10px 24px; border-radius: 100px;
+    font-size: .85rem; font-weight: 500;
+    border: 1.5px solid rgba(14,14,16,.2); color: rgba(14,14,16,.5);
+    transition: all .2s;
+  }
+  .survey-tab.active { background: var(--sage); color: #fff; border-color: var(--sage); }
+  .survey-tab:hover:not(.active) { border-color: var(--sage); color: var(--sage); }
+  .survey-card { background: #fff; border-radius: 24px; padding: 40px; box-shadow: 0 4px 32px rgba(14,14,16,.06); }
+  .survey-q-num { font-size: .72rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--sage); margin-bottom: 8px; }
+  .survey-q-text { font-size: 1.05rem; font-weight: 500; margin-bottom: 24px; line-height: 1.5; }
+  .survey-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .survey-opt {
+    padding: 12px 16px; border-radius: 12px;
+    border: 1.5px solid rgba(14,14,16,.12); font-size: .85rem;
+    text-align: left; color: var(--ink); transition: all .2s;
+    background: var(--paper);
+  }
+  .survey-opt:hover { border-color: var(--sage); background: var(--sage-pale); }
+  .survey-opt.selected { border-color: var(--sage); background: var(--sage); color: #fff; }
+  .survey-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 32px; }
+  .survey-progress { height: 4px; background: rgba(14,14,16,.1); border-radius: 2px; margin-bottom: 32px; }
+  .survey-progress-bar { height: 100%; background: var(--sage); border-radius: 2px; transition: width .4s var(--ease); }
+  .survey-result {
+    text-align: center; padding: 20px 0;
+  }
+  .result-score {
+    font-family: var(--ff-disp); font-size: 4rem; color: var(--sage);
+    line-height: 1; margin-bottom: 8px;
+  }
+  .result-level {
+    display: inline-block; padding: 6px 20px; border-radius: 100px;
+    font-size: .8rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .level-minimal  { background: #d4edda; color: #276237; }
+  .level-mild     { background: #fff3cd; color: #856404; }
+  .level-moderate { background: #ffe5b4; color: #a05c00; }
+  .level-severe   { background: #f8d7da; color: #842029; }
+  .result-msg { font-size: .95rem; line-height: 1.7; color: rgba(14,14,16,.7); margin-bottom: 24px; font-weight: 300; }
+  .result-disclaimer { font-size: .78rem; color: rgba(14,14,16,.4); font-style: italic; padding: 16px; background: var(--paper); border-radius: 12px; }
+
+  /* ── COPING ─────────────────────────────────────────────────── */
+  #coping { background: var(--paper); padding: 120px 48px; }
+  .coping-header { margin-bottom: 64px; }
+  .coping-header h2 {
+    font-family: var(--ff-disp); font-size: clamp(2rem, 3.5vw, 3.2rem);
+    letter-spacing: -.02em; line-height: 1.15;
+  }
+  .coping-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .coping-card {
+    background: #fff; border-radius: 20px; padding: 28px;
+    border: 1px solid rgba(14,14,16,.07);
+    transition: transform .3s var(--ease), box-shadow .3s;
+    cursor: pointer;
+  }
+  .coping-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(14,14,16,.1); }
+  .coping-icon {
+    width: 48px; height: 48px; border-radius: 14px;
+    background: var(--sage-pale); display: flex; align-items: center;
+    justify-content: center; font-size: 1.4rem; margin-bottom: 16px;
+  }
+  .coping-category { font-size: .7rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--sage); margin-bottom: 8px; }
+  .coping-title { font-size: 1.05rem; font-weight: 500; margin-bottom: 10px; }
+  .coping-desc { font-size: .85rem; color: rgba(14,14,16,.6); line-height: 1.6; font-weight: 300; }
+  .coping-steps {
+    margin-top: 16px; padding-top: 16px;
+    border-top: 1px solid var(--sage-pale);
+    display: none;
+  }
+  .coping-card.open .coping-steps { display: block; }
+  .coping-step {
+    display: flex; gap: 12px; margin-bottom: 10px;
+    font-size: .82rem; color: rgba(14,14,16,.7); line-height: 1.5;
+  }
+  .step-num {
+    min-width: 22px; height: 22px; border-radius: 50%;
+    background: var(--sage); color: #fff;
+    font-size: .7rem; font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* ── CHATBOT ────────────────────────────────────────────────── */
+  #chat { background: var(--ink); color: var(--paper); padding: 120px 48px; }
+  #chat .section-label { color: var(--sage-lt); }
+  .chat-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 64px; align-items: start; margin-top: 48px; }
+  .chat-intro h2 {
+    font-family: var(--ff-disp); font-size: clamp(2rem, 3vw, 3rem);
+    line-height: 1.2; letter-spacing: -.02em; margin-bottom: 20px;
+  }
+  .chat-intro h2 em { font-style: italic; color: var(--sage-lt); }
+  .chat-intro p { font-size: .9rem; color: rgba(245,241,235,.55); line-height: 1.8; font-weight: 300; margin-bottom: 24px; }
+  .chat-note {
+    padding: 16px 20px; border-radius: 14px;
+    background: rgba(245,241,235,.06); border: 1px solid rgba(245,241,235,.1);
+    font-size: .78rem; color: rgba(245,241,235,.4); line-height: 1.6;
+  }
+  .chat-window {
+    background: rgba(245,241,235,.05); border-radius: 24px;
+    border: 1px solid rgba(245,241,235,.1); overflow: hidden;
+    display: flex; flex-direction: column;
+    height: 560px;
+  }
+  .chat-header {
+    padding: 20px 24px; border-bottom: 1px solid rgba(245,241,235,.08);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .chat-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--sage); display: flex; align-items: center;
+    justify-content: center; font-size: 1rem;
+  }
+  .chat-agent-name { font-weight: 500; font-size: .9rem; }
+  .chat-agent-status { font-size: .75rem; color: var(--sage-lt); }
+  .chat-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #4ade80; margin-left: auto;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .chat-messages {
+    flex: 1; overflow-y: auto; padding: 24px;
+    display: flex; flex-direction: column; gap: 16px;
+    scrollbar-width: thin; scrollbar-color: rgba(245,241,235,.15) transparent;
+  }
+  .msg {
+    max-width: 78%; display: flex; flex-direction: column; gap: 4px;
+    animation: msgIn .3s var(--ease);
+  }
+  @keyframes msgIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+  .msg.user { align-self: flex-end; }
+  .msg.assistant { align-self: flex-start; }
+  .msg-bubble {
+    padding: 12px 16px; border-radius: 18px;
+    font-size: .88rem; line-height: 1.6;
+  }
+  .msg.user .msg-bubble {
+    background: var(--sage); color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+  .msg.assistant .msg-bubble {
+    background: rgba(245,241,235,.1); color: var(--paper);
+    border-bottom-left-radius: 4px;
+  }
+  .msg-time { font-size: .68rem; color: rgba(245,241,235,.3); padding: 0 4px; }
+  .msg.user .msg-time { text-align: right; }
+  .typing-indicator .msg-bubble {
+    display: flex; align-items: center; gap: 5px; padding: 14px 18px;
+  }
+  .typing-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: rgba(245,241,235,.4);
+    animation: typingBounce 1.2s ease-in-out infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: .2s; }
+  .typing-dot:nth-child(3) { animation-delay: .4s; }
+  @keyframes typingBounce {
+    0%,60%,100% { transform: translateY(0); }
+    30%          { transform: translateY(-6px); }
+  }
+  .chat-input-row {
+    padding: 16px 20px; border-top: 1px solid rgba(245,241,235,.08);
+    display: flex; gap: 12px; align-items: flex-end;
+  }
+  .chat-input {
+    flex: 1; background: rgba(245,241,235,.07);
+    border: 1px solid rgba(245,241,235,.12); border-radius: 16px;
+    color: var(--paper); font-family: var(--ff-body);
+    font-size: .88rem; padding: 12px 16px; resize: none;
+    outline: none; max-height: 120px; line-height: 1.5;
+    transition: border-color .2s;
+  }
+  .chat-input::placeholder { color: rgba(245,241,235,.3); }
+  .chat-input:focus { border-color: var(--sage); }
+  .chat-send {
+    width: 42px; height: 42px; border-radius: 12px;
+    background: var(--sage); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0;
+    transition: background .2s, transform .15s;
+  }
+  .chat-send:hover { background: var(--sage-lt); transform: scale(1.05); }
+  .chat-send:disabled { opacity: .4; pointer-events: none; }
+  .chat-suggestions {
+    padding: 12px 20px 0; display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .suggest-btn {
+    padding: 7px 14px; border-radius: 100px; font-size: .75rem; font-weight: 500;
+    border: 1px solid rgba(245,241,235,.15); color: rgba(245,241,235,.6);
+    transition: all .2s;
+  }
+  .suggest-btn:hover { border-color: var(--sage); color: var(--sage-lt); background: rgba(74,124,111,.1); }
+
+  /* ── RESOURCES ──────────────────────────────────────────────── */
+  #resources { background: var(--sage-pale); padding: 120px 48px; }
+  .resources-header { margin-bottom: 56px; }
+  .resources-header h2 {
+    font-family: var(--ff-disp); font-size: clamp(2rem, 3.5vw, 3.2rem);
+    letter-spacing: -.02em;
+  }
+  .resources-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .resource-section h3 {
+    font-size: .72rem; font-weight: 500; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--sage); margin-bottom: 20px;
+  }
+  .resource-card {
+    background: #fff; border-radius: 16px; padding: 20px;
+    margin-bottom: 12px; transition: transform .2s, box-shadow .2s;
+    border: 1px solid rgba(74,124,111,.1);
+  }
+  .resource-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(74,124,111,.12); }
+  .resource-name { font-weight: 500; font-size: .9rem; margin-bottom: 4px; }
+  .resource-phone {
+    font-family: var(--ff-disp); font-size: 1.2rem; color: var(--sage);
+    margin: 6px 0;
+  }
+  .resource-desc { font-size: .78rem; color: rgba(14,14,16,.55); line-height: 1.5; }
+  .resource-link {
+    display: inline-flex; align-items: center; gap: 4px;
+    margin-top: 8px; font-size: .75rem; color: var(--sage); font-weight: 500;
+  }
+
+  /* ── FOOTER ─────────────────────────────────────────────────── */
+  footer {
+    background: var(--ink); color: rgba(245,241,235,.4);
+    padding: 48px; text-align: center; font-size: .8rem; line-height: 1.8;
+  }
+  footer strong { color: var(--sage-lt); }
+
+  /* ── SCROLL REVEAL ──────────────────────────────────────────── */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ── MOBILE ─────────────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    section { padding: 100px 24px 60px; }
+    #hero { grid-template-columns: 1fr; }
+    .hero-blob { display: none; }
+    .what-grid, .chat-layout, .resources-grid { grid-template-columns: 1fr; }
+    .survey-options { grid-template-columns: 1fr; }
+    body { cursor: auto; }
+    #cursor { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div id="cursor"></div>
+
+<!-- ── NAV ──────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-logo">auto<span>nomic</span></div>
+  <ul class="nav-links">
+    <li><a href="#what">About Anxiety</a></li>
+    <li><a href="#survey">Self-Check</a></li>
+    <li><a href="#coping">Cope</a></li>
+    <li><a href="#resources">Help</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('chat').scrollIntoView({behavior:'smooth'})">Talk to Calm →</button>
+</nav>
+
+<!-- ── HERO ─────────────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-blob"></div>
+
+  <div class="hero-text">
+    <div class="hero-eyebrow">Awareness, not diagnosis</div>
+    <h1 class="hero-h1">
+      You're not<br><em>alone</em> in this.
+    </h1>
+    <p class="hero-sub">
+      Autonomic is a safe, science-backed space to understand anxiety,
+      gauge how you're feeling, and discover tools to find your calm.
+    </p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="document.getElementById('survey').scrollIntoView({behavior:'smooth'})">
+        Take the self-check &nbsp;→
+      </button>
+      <button class="btn-outline" onclick="document.getElementById('what').scrollIntoView({behavior:'smooth'})">
+        Learn about anxiety
+      </button>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="hero-card">
+      <div class="hero-card-label">Did you know?</div>
+      <div class="fact-row">
+        <div class="fact-num">1 in 4</div>
+        <div>
+          <div class="fact-desc">people experience a mental health problem each year</div>
+          <div class="fact-src">NHS England</div>
+        </div>
+      </div>
+      <div class="fact-row">
+        <div class="fact-num">40%</div>
+        <div>
+          <div class="fact-desc">of college students report overwhelming anxiety</div>
+          <div class="fact-src">ACHA National Health Assessment</div>
+        </div>
+      </div>
+      <div class="fact-row">
+        <div class="fact-num">18–25</div>
+        <div>
+          <div class="fact-desc">the age group most likely to experience anxiety</div>
+          <div class="fact-src">NIMH, 2023</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHAT IS ANXIETY ───────────────────────────────────────────── -->
+<section id="what">
+  <div class="section-label">Understanding anxiety</div>
+  <div class="what-grid">
+    <div>
+      <p class="what-intro">
+        Anxiety is your body's <em>natural alarm system</em> — it becomes a concern when the alarm won't turn off.
+      </p>
+      <p style="color:rgba(245,241,235,.5);font-size:.9rem;line-height:1.8;margin-top:24px;font-weight:300;">
+        Some anxiety is normal and even helpful — it keeps you alert before exams, 
+        careful near danger. It becomes a concern when it's excessive, persistent, 
+        or starts interfering with daily life.
+      </p>
+      <div style="margin-top:32px;">
+        <div style="font-size:.72rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--sage-lt);margin-bottom:16px;">Common physical symptoms</div>
+        <div class="symptoms-grid" id="symptomsGrid"></div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:.72rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--sage-lt);margin-bottom:16px;">Types of anxiety</div>
+      <div class="types-list" id="typesList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SURVEY ────────────────────────────────────────────────────── -->
+<section id="survey">
+  <div class="survey-wrap">
+    <div class="survey-header reveal">
+      <div class="section-label" style="color:var(--sage);">Self-check</div>
+      <h2>How are you feeling<br>these past two weeks?</h2>
+      <p>These validated scales (GAD-7 & PHQ-4) are used worldwide as awareness tools. 
+         This is <strong>not</strong> a diagnosis — it's a starting point for self-reflection.</p>
+    </div>
+    <div class="survey-tabs">
+      <button class="survey-tab active" onclick="switchSurvey('GAD7',this)">GAD-7 Full Check</button>
+      <button class="survey-tab" onclick="switchSurvey('PHQ4',this)">PHQ-4 Quick Check</button>
+    </div>
+    <div class="survey-card reveal">
+      <div class="survey-progress"><div class="survey-progress-bar" id="progressBar" style="width:0%"></div></div>
+      <div id="surveyContent"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── COPING STRATEGIES ─────────────────────────────────────────── -->
+<section id="coping">
+  <div class="coping-header reveal">
+    <div class="section-label">Tools that actually work</div>
+    <h2>Coping strategies,<br>grounded in science</h2>
+  </div>
+  <div class="coping-grid" id="copingGrid"></div>
+</section>
+
+<!-- ── CHATBOT ───────────────────────────────────────────────────── -->
+<section id="chat">
+  <div class="section-label">AI companion</div>
+  <div class="chat-layout">
+    <div class="chat-intro reveal">
+      <h2>Meet <em>Calm</em> — your anxiety companion</h2>
+      <p>Calm is an AI-powered chatbot trained to help you understand anxiety, 
+         learn coping techniques, and feel less alone. It remembers your conversation 
+         so you can pick up right where you left off.</p>
+      <p>Ask anything — from "what is anxiety?" to "I'm feeling overwhelmed right now."</p>
+      <div class="chat-note">
+        ⚠️ Calm is an awareness tool, not a therapist. If you're in crisis, 
+        please use the helplines in the Resources section below.
+      </div>
+    </div>
+
+    <div>
+      <div class="chat-window">
+        <div class="chat-header">
+          <div class="chat-avatar">🌿</div>
+          <div>
+            <div class="chat-agent-name">Calm</div>
+            <div class="chat-agent-status">Anxiety Awareness Companion</div>
+          </div>
+          <div class="chat-dot"></div>
+        </div>
+        <div class="chat-suggestions" id="suggestions">
+          <button class="suggest-btn" onclick="sendSuggestion(this)">What is anxiety?</button>
+          <button class="suggest-btn" onclick="sendSuggestion(this)">I feel overwhelmed</button>
+          <button class="suggest-btn" onclick="sendSuggestion(this)">Breathing exercise</button>
+          <button class="suggest-btn" onclick="sendSuggestion(this)">Grounding technique</button>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-row">
+          <textarea class="chat-input" id="chatInput" rows="1"
+            placeholder="Type a message…"
+            onkeydown="handleKey(event)"
+            oninput="autoResize(this)"></textarea>
+          <button class="chat-send" id="sendBtn" onclick="sendMessage()">↑</button>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:16px;">
+        <button onclick="clearChat()" style="font-size:.75rem;color:rgba(245,241,235,.3);text-decoration:underline;background:none;border:none;cursor:pointer;">Clear conversation</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── RESOURCES ─────────────────────────────────────────────────── -->
+<section id="resources">
+  <div class="resources-header reveal">
+    <div class="section-label">You don't have to face this alone</div>
+    <h2>Crisis lines &amp; resources</h2>
+  </div>
+  <div class="resources-grid">
+    <div class="resource-section">
+      <h3>📞 India Helplines</h3>
+      <div class="resource-card">
+        <div class="resource-name">iCall</div>
+        <div class="resource-phone">9152987821</div>
+        <div class="resource-desc">Psychosocial helpline by TISS, Mumbai. Mon–Sat, 8am–10pm.</div>
+      </div>
+      <div class="resource-card">
+        <div class="resource-name">Vandrevala Foundation</div>
+        <div class="resource-phone">1860-2662-345</div>
+        <div class="resource-desc">24/7 mental health helpline across India.</div>
+      </div>
+      <div class="resource-card">
+        <div class="resource-name">AASRA</div>
+        <div class="resource-phone">9820466627</div>
+        <div class="resource-desc">Crisis intervention centre. Available 24 hours.</div>
+      </div>
+    </div>
+    <div class="resource-section">
+      <h3>🏥 Professional Help</h3>
+      <div class="resource-card">
+        <div class="resource-name">Therapize India</div>
+        <div class="resource-desc">Directory of verified therapists and counsellors across India.</div>
+        <a class="resource-link" href="https://www.therapize.in" target="_blank">Visit →</a>
+      </div>
+      <div class="resource-card">
+        <div class="resource-name">NIMHANS</div>
+        <div class="resource-desc">National Institute of Mental Health and Neurosciences, Bangalore.</div>
+        <a class="resource-link" href="https://nimhans.ac.in" target="_blank">Visit →</a>
+      </div>
+      <div class="resource-card">
+        <div class="resource-name">The Live Love Laugh Foundation</div>
+        <div class="resource-desc">Indian foundation dedicated to mental health awareness.</div>
+        <a class="resource-link" href="https://thelivelovelaughfoundation.org" target="_blank">Visit →</a>
+      </div>
+    </div>
+    <div class="resource-section">
+      <h3>📱 Self-Help Apps</h3>
+      <div class="resource-card">
+        <div class="resource-name">Wysa</div>
+        <div class="resource-desc">AI-powered mental wellness app, popular in India. Free tier available.</div>
+        <a class="resource-link" href="https://www.wysa.com" target="_blank">Download →</a>
+      </div>
+      <div class="resource-card">
+        <div class="resource-name">Headspace</div>
+        <div class="resource-desc">Guided meditation and mindfulness exercises.</div>
+        <a class="resource-link" href="https://www.headspace.com" target="_blank">Download →</a>
+      </div>
+      <div class="resource-card">
+        <div class="resource-name">Woebot</div>
+        <div class="resource-desc">CBT-based chatbot for managing anxiety and mood.</div>
+        <a class="resource-link" href="https://woebothealth.com" target="_blank">Try →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ────────────────────────────────────────────────────── -->
+<footer>
+  <div style="font-family:var(--ff-disp);font-size:1.4rem;color:var(--sage-lt);margin-bottom:12px;">autonomic</div>
+  <p>Built as a KIIT University 4th Year Major Project · Anxiety Awareness Guide</p>
+  <p style="margin-top:8px;"><strong>Not a diagnostic or clinical tool.</strong> Always seek professional help when needed.</p>
+  <p style="margin-top:16px;font-size:.72rem;opacity:.5;">Data references: NHS England · NIMH 2023 · ACHA · Our World in Data</p>
+</footer>
+
+<script>
+// ── DATA ────────────────────────────────────────────────────────────
+const SYMPTOMS = [
+  "Rapid heartbeat","Shortness of breath","Sweating","Trembling",
+  "Fatigue","Difficulty concentrating","Sleep problems","Stomach issues"
+];
+
+const ANXIETY_TYPES = [
+  { name: "Generalised Anxiety (GAD)", desc: "Persistent, excessive worry about many areas of life" },
+  { name: "Social Anxiety", desc: "Intense fear of social situations or being judged" },
+  { name: "Panic Disorder", desc: "Recurring, unexpected panic attacks" },
+  { name: "Specific Phobias", desc: "Intense fear of a specific object or situation" },
+  { name: "Separation Anxiety", desc: "Excessive fear about separation from close people" },
+];
+
+const GAD7 = {
+  type: "GAD7",
+  questions: [
+    "Feeling nervous, anxious, or on edge",
+    "Not being able to stop or control worrying",
+    "Worrying too much about different things",
+    "Trouble relaxing",
+    "Being so restless that it is hard to sit still",
+    "Becoming easily annoyed or irritable",
+    "Feeling afraid as if something awful might happen",
+  ]
+};
+const PHQ4 = {
+  type: "PHQ4",
+  questions: [
+    "Feeling nervous, anxious, or on edge",
+    "Not being able to stop or control worrying",
+    "Little interest or pleasure in doing things",
+    "Feeling down, depressed, or hopeless",
+  ]
+};
+const OPTIONS = ["Not at all","Several days","More than half the days","Nearly every day"];
+
+const COPING = [
+  {
+    icon: "🌬️", category: "breathing", title: "4-7-8 Breathing",
+    desc: "Activates your parasympathetic nervous system to slow heart rate and calm the mind.",
+    steps: ["Sit comfortably, close your eyes", "Inhale through your nose for 4 seconds", "Hold your breath for 7 seconds", "Exhale through your mouth for 8 seconds", "Repeat 3–4 times"]
+  },
+  {
+    icon: "🌿", category: "grounding", title: "5-4-3-2-1 Grounding",
+    desc: "Engages all five senses to anchor you firmly in the present moment.",
+    steps: ["Name 5 things you can SEE", "Name 4 things you can TOUCH", "Name 3 things you can HEAR", "Name 2 things you can SMELL", "Name 1 thing you can TASTE"]
+  },
+  {
+    icon: "💪", category: "body", title: "Progressive Muscle Relaxation",
+    desc: "Systematically tense and release muscle groups to dissolve physical tension.",
+    steps: ["Start with your feet — tense for 5s, release for 10s", "Move up: calves, thighs, stomach", "Continue: hands, arms, shoulders", "Finish with face and jaw", "Do a full body scan"]
+  },
+  {
+    icon: "✍️", category: "cognitive", title: "Worry Journaling",
+    desc: "Writing externalises thoughts, reducing their emotional intensity.",
+    steps: ["Set a 10-minute timer", "Write freely — no editing", "Ask: what triggered this?", "Ask: how likely is the worst case?", "Write one small action you can take"]
+  },
+];
+
+// ── BACKEND CONFIG ────────────────────────────────────────────────
+// Change this to your Flask server URL when running locally or deployed
+const API_BASE = "http://localhost:5000/api";
+
+// ── STATE ─────────────────────────────────────────────────────────
+let sessionId = localStorage.getItem("calm_session_id") || null;
+let currentSurvey = GAD7;
+let answers = [];
+let currentQ = 0;
+let surveying = true;
+
+// ── CURSOR ────────────────────────────────────────────────────────
+const cursor = document.getElementById("cursor");
+document.addEventListener("mousemove", e => {
+  cursor.style.left = e.clientX + "px";
+  cursor.style.top  = e.clientY + "px";
+});
+document.querySelectorAll("a,button,.coping-card,.survey-opt,.resource-card").forEach(el => {
+  el.addEventListener("mouseenter", () => cursor.classList.add("grow"));
+  el.addEventListener("mouseleave", () => cursor.classList.remove("grow"));
+});
+
+// ── SCROLL REVEAL ──────────────────────────────────────────────────
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); } });
+}, { threshold: 0.12 });
+document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+// ── RENDER STATIC DATA ─────────────────────────────────────────────
+function renderSymptoms() {
+  document.getElementById("symptomsGrid").innerHTML =
+    SYMPTOMS.map(s => `<div class="symptom-chip">${s}</div>`).join("");
+}
+function renderTypes() {
+  document.getElementById("typesList").innerHTML =
+    ANXIETY_TYPES.map(t => `
+      <div class="type-item reveal">
+        <div class="type-name">${t.name}</div>
+        <div class="type-desc">${t.desc}</div>
+      </div>`).join("");
+  document.querySelectorAll(".type-item.reveal").forEach(el => observer.observe(el));
+}
+function renderCoping() {
+  document.getElementById("copingGrid").innerHTML =
+    COPING.map((c,i) => `
+      <div class="coping-card reveal" style="transition-delay:${i*0.08}s" onclick="toggleCoping(this)">
+        <div class="coping-icon">${c.icon}</div>
+        <div class="coping-category">${c.category}</div>
+        <div class="coping-title">${c.title}</div>
+        <div class="coping-desc">${c.desc}</div>
+        <div class="coping-steps">
+          ${c.steps.map((s,j)=>`<div class="coping-step"><span class="step-num">${j+1}</span><span>${s}</span></div>`).join("")}
+        </div>
+      </div>`).join("");
+  document.querySelectorAll(".coping-card.reveal").forEach(el => observer.observe(el));
+}
+function toggleCoping(el) { el.classList.toggle("open"); }
+
+// ── SURVEY ─────────────────────────────────────────────────────────
+function switchSurvey(type, btn) {
+  document.querySelectorAll(".survey-tab").forEach(t => t.classList.remove("active"));
+  btn.classList.add("active");
+  currentSurvey = type === "GAD7" ? GAD7 : PHQ4;
+  answers = []; currentQ = 0; surveying = true;
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const total = currentSurvey.questions.length;
+  const pct = (currentQ / total) * 100;
+  document.getElementById("progressBar").style.width = pct + "%";
+
+  document.getElementById("surveyContent").innerHTML = `
+    <div class="survey-q-num">Question ${currentQ + 1} of ${total}</div>
+    <div class="survey-q-text">${currentSurvey.questions[currentQ]}</div>
+    <div class="survey-options">
+      ${OPTIONS.map((o,i) => `
+        <button class="survey-opt ${answers[currentQ] === i ? 'selected' : ''}"
+          onclick="selectAnswer(${i})">${o}</button>`).join("")}
+    </div>
+    <div class="survey-nav">
+      <button class="btn-outline" style="padding:10px 20px;font-size:.82rem;"
+        onclick="prevQ()" ${currentQ === 0 ? 'disabled style="opacity:.3"' : ''}>← Back</button>
+      <button class="btn-primary" style="padding:10px 20px;font-size:.82rem;"
+        onclick="nextQ()" id="nextBtn"
+        ${answers[currentQ] === undefined ? 'disabled style="opacity:.4"' : ''}>
+        ${currentQ === total - 1 ? 'See my result →' : 'Next →'}
+      </button>
+    </div>`;
+}
+
+function selectAnswer(val) {
+  answers[currentQ] = val;
+  renderQuestion();
+}
+function prevQ() { if (currentQ > 0) { currentQ--; renderQuestion(); } }
+function nextQ() {
+  if (answers[currentQ] === undefined) return;
+  if (currentQ < currentSurvey.questions.length - 1) { currentQ++; renderQuestion(); }
+  else showResult();
+}
+
+function showResult() {
+  const total = answers.reduce((a,b) => a+b, 0);
+  let level, msg;
+  if (currentSurvey.type === "GAD7") {
+    if (total <= 4)       { level="minimal"; msg="Your responses suggest minimal anxiety. This is the normal range — keep up your healthy habits!"; }
+    else if (total <= 9)  { level="mild";    msg="Your responses suggest mild anxiety — very common, especially among students. Simple coping strategies can help a lot."; }
+    else if (total <= 14) { level="moderate";msg="Your responses suggest moderate anxiety. Consider speaking with a counsellor or trusted person in your life."; }
+    else                  { level="severe";  msg="Your responses suggest severe anxiety. We strongly encourage you to speak with a mental health professional."; }
+  } else {
+    if (total <= 2)       { level="normal";  msg="Your responses are in the normal range. Keep taking care of yourself!"; }
+    else if (total <= 5)  { level="mild";    msg="Mild signs detected. Regular sleep, exercise, and breathing exercises can make a big difference."; }
+    else if (total <= 8)  { level="moderate";msg="Moderate signs detected. Speaking with a counsellor could be very helpful right now."; }
+    else                  { level="severe";  msg="Severe signs detected. Please consider reaching out to a mental health professional soon."; }
+  }
+  document.getElementById("progressBar").style.width = "100%";
+  document.getElementById("surveyContent").innerHTML = `
+    <div class="survey-result">
+      <div class="result-score">${total}</div>
+      <div class="result-level level-${level}">${level}</div>
+      <p class="result-msg">${msg}</p>
+      <div class="result-disclaimer">
+        ⚠️ This is an awareness tool, not a clinical diagnosis. 
+        Scores are for personal reflection only. Always seek professional help if needed.
+      </div>
+      <button class="btn-outline" style="margin-top:24px;" onclick="restartSurvey()">Take it again</button>
+    </div>`;
+
+  // Send to backend (fire and forget — no UI dependency)
+  fetch(`${API_BASE}/survey/submit`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ survey_type: currentSurvey.type, answers, session_id: sessionId })
+  }).catch(() => {});  // silent fail — doesn't block UX
+}
+
+function restartSurvey() { answers = []; currentQ = 0; renderQuestion(); }
+
+// ── CHAT ────────────────────────────────────────────────────────────
+function addMessage(role, content) {
+  const msgs = document.getElementById("chatMessages");
+  const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const div = document.createElement("div");
+  div.className = `msg ${role}`;
+  div.innerHTML = `
+    <div class="msg-bubble">${content.replace(/\n/g,"<br>")}</div>
+    <div class="msg-time">${time}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addTyping() {
+  const msgs = document.getElementById("chatMessages");
+  const div = document.createElement("div");
+  div.className = "msg assistant typing-indicator";
+  div.id = "typing";
+  div.innerHTML = `<div class="msg-bubble"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+function removeTyping() {
+  const t = document.getElementById("typing");
+  if (t) t.remove();
+}
+
+async function sendMessage() {
+  const input = document.getElementById("chatInput");
+  const text = input.value.trim();
+  if (!text) return;
+
+  // Hide suggestions after first real message
+  document.getElementById("suggestions").style.display = "none";
+
+  input.value = "";
+  input.style.height = "auto";
+  document.getElementById("sendBtn").disabled = true;
+
+  addMessage("user", text);
+  const typing = addTyping();
+
+  try {
+    const res = await fetch(`${API_BASE}/chat/message`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text, session_id: sessionId }),
+    });
+    const data = await res.json();
+    removeTyping();
+
+    if (data.status === "success") {
+      sessionId = data.data.session_id;
+      localStorage.setItem("calm_session_id", sessionId);
+      addMessage("assistant", data.data.reply);
+    } else {
+      addMessage("assistant", "Sorry, I ran into an issue. Please try again in a moment.");
+    }
+  } catch {
+    removeTyping();
+    addMessage("assistant",
+      "I can't connect to the server right now. Make sure the backend is running at " + API_BASE + ".\n\nIn the meantime: take a slow, deep breath. Inhale for 4 counts, hold for 7, exhale for 8. 🌿");
+  }
+
+  document.getElementById("sendBtn").disabled = false;
+  input.focus();
+}
+
+function sendSuggestion(btn) {
+  document.getElementById("chatInput").value = btn.textContent;
+  sendMessage();
+}
+
+function handleKey(e) {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = "auto";
+  el.style.height = Math.min(el.scrollHeight, 120) + "px";
+}
+
+function clearChat() {
+  document.getElementById("chatMessages").innerHTML = "";
+  document.getElementById("suggestions").style.display = "flex";
+  if (sessionId) {
+    fetch(`${API_BASE}/chat/session/${sessionId}`, { method: "DELETE" }).catch(() => {});
+    sessionId = null;
+    localStorage.removeItem("calm_session_id");
+  }
+  addMessage("assistant", "Chat cleared! I'm here whenever you're ready. 🌿");
+}
+
+// ── INIT ────────────────────────────────────────────────────────────
+renderSymptoms();
+renderTypes();
+renderCoping();
+renderQuestion();
+// Opening message from Calm
+addMessage("assistant", "Hi, I'm Calm 🌿\n\nI'm here to help you understand anxiety and find your footing. You can ask me anything — from what anxiety feels like, to techniques you can try right now.\n\nWhat's on your mind?");
+</script>
+</body>
+</html>
